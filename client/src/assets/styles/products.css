@@ -1,0 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+.products {
+  font-family: "Poppins", sans-serif;
+  margin-top: 35px;
+  font-weight: lighter;
+}
+.prod,
+.team,
+.resour,
+.plat {
+  font-size: large;
+}

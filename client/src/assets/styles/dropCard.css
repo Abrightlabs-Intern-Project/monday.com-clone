@@ -1,0 +1,10 @@
+.cardHolder {
+  margin-bottom: 30px;
+}
+.card-container {
+  padding: 10px;
+  background-color: rgb(48, 50, 78);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

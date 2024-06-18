@@ -1,0 +1,59 @@
+.text {
+  color: rgb(97, 97, 255) !important;
+}
+.marketingHeaderText {
+  font-size: 4rem;
+}
+.contentHolder {
+  display: inline-block;
+  border: 1px solid black;
+  border-radius: 15px;
+  padding: 8px;
+  background-color: rgb(245, 246, 248);
+  margin: 0;
+  white-space: nowrap;
+}
+.secondRow {
+  margin-left: 100px;
+}
+.getStarted {
+  padding: 30px;
+  margin-top: 50px;
+  margin-left: -80px;
+}
+.getStarted:hover .arrow {
+  transform: translateX(5px);
+}
+.WMG {
+  cursor: pointer;
+  color: white;
+  border-radius: 20px;
+  border-color: rgb(97, 97, 255);
+  background-color: rgb(53, 127, 231);
+}
+.aboutHeader {
+  font-size: 2.75rem;
+}
+.list {
+  list-style: none;
+}
+.listItem {
+  text-align: start;
+  border-bottom: 2px solid rgb(183, 195, 212);
+  white-space: nowrap;
+  padding-bottom: 5px;
+}
+.aboutImageHolder {
+  width: 250px;
+  height: 250px;
+}
+.aboutImage {
+  height: 425px;
+}
+.prosNum {
+  color: rgb(53, 127, 231);
+}
+.feeatureContainer {
+  margin-top: 100px;
+  background-color: rgb(240, 243, 255);
+}

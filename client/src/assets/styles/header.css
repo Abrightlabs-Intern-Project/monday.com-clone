@@ -1,0 +1,54 @@
+.bcg {
+  background-color: rgb(48, 50, 78);
+  color: white;
+}
+.LogoHolder {
+  width: 30px;
+}
+
+.plans {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.plans p {
+  margin: 0;
+  padding: 8px;
+  border-radius: 15px;
+  color: rgb(11, 170, 103);
+  display: inline-block;
+}
+
+/* .plans:hover p {
+  background-color: rgb(11, 170, 103);
+  color: white;
+} */
+
+.Logo {
+  display: flex;
+  align-items: center;
+}
+
+.DevText p {
+  margin: 0;
+}
+
+.Hidden {
+  position: relative;
+}
+
+.DropMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+}

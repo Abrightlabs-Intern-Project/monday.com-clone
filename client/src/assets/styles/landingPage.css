@@ -1,0 +1,48 @@
+.landingPage {
+  background-color: rgb(24, 27, 52);
+  padding: 0;
+  margin: 0;
+}
+
+.headerText {
+  width: 100vw;
+  font-size: 3rem;
+  font-weight: bolder;
+  color: white;
+}
+.started {
+  width: 200px;
+  height: 50px;
+  background-color: white;
+  color: black;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 30px;
+  padding-right: 20px;
+  border-radius: 20px;
+}
+
+.arrow {
+  margin-left: 10px;
+  transition: transform 0.2s ease;
+}
+.started:hover .arrow {
+  transform: translateX(5px);
+}
+.bcg {
+  width: 100vw;
+  background-color: rgb(49, 50, 78);
+}
+.advHead {
+  font-size: 4rem;
+}
+.footer {
+  background-color: white;
+}
+.footerText {
+  font-size: 4rem;
+}
+.Foot {
+  margin: 0;
+  background-color: rgb(0, 202, 114);
+}

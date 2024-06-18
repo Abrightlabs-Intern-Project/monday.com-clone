@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+.starter {
+  font-family: "Poppins";
+  margin-top: 35px;
+  font-weight: lighter;
+}
+
+.btn-transparent {
+  white-space: nowrap;
+}
+.contact-details,
+.get-started {
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.contact-details {
+  color: rgb(97, 97, 255);
+  border-radius: 20px;
+  border-color: rgb(97, 97, 255);
+}
+
+.get-started {
+  padding: 6px;
+  padding-right: 10px;
+  padding-left: 10px;
+  cursor: pointer;
+  color: white;
+  border-radius: 20px;
+  border-color: rgb(97, 97, 255);
+  background-color: rgb(53, 127, 231);
+}
+
+.log:hover {
+  border-radius: 20px;
+  background-color: rgb(240, 243, 255);
+  color: rgb(127, 119, 255);
+}
+.pricing:hover {
+  border-radius: 20px;
+  background-color: rgb(240, 243, 255);
+  color: rgb(127, 119, 255);
+}
+
+.contact-details:hover {
+  background-color: rgb(53, 127, 231);
+  color: white;
+}
+.arrow {
+  color: white;
+  margin-left: 5px;
+  transition: transform 0.3s ease;
+}
+.get-started:hover .arrow {
+  transform: translateX(5px);
+}

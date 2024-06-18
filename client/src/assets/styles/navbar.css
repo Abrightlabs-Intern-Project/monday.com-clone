@@ -1,0 +1,23 @@
+.image-logo {
+  margin-top: 12px;
+  margin-left: 10px;
+  width: 150px;
+  height: auto;
+}
+.navstarter {
+  margin-left: 60px;
+}
+
+.full-width-border {
+  width: 100%;
+  height: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: rgb(137, 127, 245);
+  position: relative; /* Optional: to ensure it stays within the flow */
+  top: -2px; /* Adjust if necessary to align with the bottom of the logo */
+}
+.navigation {
+  background-color: white;
+  top: 0;
+  z-index: 1000;
+}

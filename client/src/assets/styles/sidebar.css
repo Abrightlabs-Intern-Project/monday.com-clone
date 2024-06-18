@@ -1,0 +1,23 @@
+.barHolder {
+  border-radius: 5px;
+  background-color: rgb(48, 50, 78);
+}
+.templateHolder {
+  border: 1px solid white;
+}
+.customTemp {
+  width: 225px;
+  padding: 10px;
+  background-color: rgb(48, 50, 78);
+  border: 1px solid white;
+  color: white;
+}
+.help {
+  background-color: rgb(48, 50, 78);
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 10px;
+}
+.fsize {
+  font-size: small;
+}

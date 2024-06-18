@@ -1,0 +1,50 @@
+.drop {
+  width: 400px;
+  background-color: rgb(48, 50, 78);
+  color: white;
+  border-radius: 15px;
+}
+.work,
+.dev {
+  width: 125px;
+  height: 125px;
+}
+.images {
+  width: 50px;
+  border: 1px solid rgba(109, 109, 255, 0.424);
+  padding: 3px;
+}
+.imag-text {
+  margin-top: 10px;
+  font-size: small;
+  white-space: wrap;
+}
+
+.devImg {
+  width: 60px;
+  height: 55px;
+  padding: 3px;
+  border: 1px solid rgb(1, 201, 113);
+}
+.CrmImg {
+  width: 60px;
+  height: 55px;
+  padding: 3px;
+  border: 1px solid rgb(146, 236, 236);
+}
+.images:hover {
+  border: 5px solid rgba(109, 109, 255, 0.424);
+}
+.devImg:hover {
+  border: 5px solid rgb(1, 201, 113);
+}
+.CrmImg:hover {
+  border: 5px solid rgb(146, 236, 236);
+}
+.border {
+  width: 350px;
+  border: 1px solid white;
+}
+.text {
+  margin-left: 80px;
+}

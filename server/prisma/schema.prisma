@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId        String        @id @default(uuid())
+  firstName String     @db.VarChar(50)
+  lastName  String?    @db.VarChar(50)
+  email     String     @unique
+  password  String     @db.VarChar(100)
+  tasks     Task[]     @relation("UserTasks")
+  TaskUser  TaskUser[]
+}
+
+  model Task {
+  taskId String @id @default(uuid())
+  name String @db.VarChar(100)
+  description String? @db.Text
+  type String @db.VarChar(50)
+  priority String @db.VarChar(50)
+  status String @db.VarChar(50)
+  sprintId    String?
+  sprint      Sprint? @relation(fields: [sprintId], references: [sprintId])
+  users User[] @relation("UserTasks")
+  TaskUser TaskUser[]
+  }
+
+model Sprint {
+  sprintId        String        @id @default(uuid())
+  name      String   @db.VarChar(50)
+  goals     String   @db.Text
+  startDate DateTime
+  endDate   DateTime
+  tasks     Task[]
+}
+
+model TaskUser {
+  id     String  @id @default(uuid())
+  userId String
+  taskId String
+  user   User @relation(fields: [userId], references: [userId])
+  task   Task @relation(fields: [taskId], references: [taskId])
+
+  @@unique([userId, taskId], name: "UniqueUserTask")
+}

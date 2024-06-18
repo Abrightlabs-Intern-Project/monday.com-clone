@@ -1,0 +1,35 @@
+.templateHead {
+  width: 190px; /* Fixed width to prevent resizing */
+  white-space: nowrap; /* Prevent text wrapping */
+  border: 1px solid white;
+  color: white;
+  font-weight: 400;
+  border-radius: 20px;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background-color 0.3s ease;
+}
+
+.templateHead:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.TemplateHolder .row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.templateText {
+  text-align: center;
+  margin-top: 20px;
+  white-space: wrap;
+}
+
+.templateImage img {
+  max-width: 600px;
+  height: 400px;
+  border-radius: 10px;
+}

@@ -1,0 +1,62 @@
+.workspace-container {
+  background-color: rgb(48, 50, 78);
+  padding: 10px;
+}
+
+.workspace-card {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #2f314d;
+  border: 1px solid white;
+  border-radius: 8px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.workspace-card-content {
+  display: flex;
+  align-items: center;
+}
+
+.workspace-image {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.workspace-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.workspace-title {
+  margin: 0;
+  font-size: 16px;
+  color: white;
+}
+
+.workspace-product {
+  display: flex;
+  align-items: center;
+}
+
+.product-logo {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.product-name {
+  margin: 0;
+  font-size: 12px;
+  color: #a8a9b6;
+}
+
+/* Media query for responsive design */
+@media (max-width: 768px) {
+  .workspace-card {
+    flex: 0 0 100%;
+  }
+}
