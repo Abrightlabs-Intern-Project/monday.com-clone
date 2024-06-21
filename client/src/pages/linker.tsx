@@ -10,11 +10,11 @@ const Linker = () => {
             Home
           </Link>
         </li>
-        <li className="nav-item">
+        {/* <li className="nav-item">
           <Link className="nav-link text-white" to="/work">
             Work
           </Link>
-        </li>
+        </li> */}
         <li className="nav-item">
           <Link className="nav-link text-white" to="/task">
             Task

@@ -7,44 +7,57 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Company {
+  companyId          String   @id @default(uuid()) @db.VarChar(36)
+  companyName        String   @unique @db.VarChar(60)
+  companyDescription String   @db.Text
+  companySize        String   @db.VarChar(6)
+  users              User[]
+  sprints            Sprint[]
+}
+
 model User {
-  userId        String        @id @default(uuid())
+  userId    String     @id @default(uuid()) @db.VarChar(36)
   firstName String     @db.VarChar(50)
   lastName  String?    @db.VarChar(50)
   email     String     @unique
   password  String     @db.VarChar(100)
   tasks     Task[]     @relation("UserTasks")
   TaskUser  TaskUser[]
+  companyId String?    @db.VarChar(36)
+  company   Company?   @relation(fields: [companyId], references: [companyId])
 }
 
-  model Task {
-  taskId String @id @default(uuid())
-  name String @db.VarChar(100)
-  description String? @db.Text
-  type String @db.VarChar(50)
-  priority String @db.VarChar(50)
-  status String @db.VarChar(50)
+model Task {
+  taskId      String     @id @default(uuid()) @db.VarChar(36)
+  name        String     @db.VarChar(100)
+  description String?    @db.Text
+  type        String     @db.VarChar(50)
+  priority    String     @db.VarChar(50)
+  status      String     @db.VarChar(50)
   sprintId    String?
-  sprint      Sprint? @relation(fields: [sprintId], references: [sprintId])
-  users User[] @relation("UserTasks")
-  TaskUser TaskUser[]
-  }
+  sprint      Sprint?    @relation(fields: [sprintId], references: [sprintId])
+  users       User[]     @relation("UserTasks")
+  TaskUser    TaskUser[]
+}
 
 model Sprint {
-  sprintId        String        @id @default(uuid())
+  sprintId  String   @id @default(uuid()) @db.VarChar(36)
   name      String   @db.VarChar(50)
   goals     String   @db.Text
   startDate DateTime
   endDate   DateTime
   tasks     Task[]
+  companyId String?  @db.VarChar(36)
+  Company   Company? @relation(fields: [companyId], references: [companyId])
 }
 
 model TaskUser {
-  id     String  @id @default(uuid())
+  id     String @id @default(uuid())
   userId String
   taskId String
-  user   User @relation(fields: [userId], references: [userId])
-  task   Task @relation(fields: [taskId], references: [taskId])
+  user   User   @relation(fields: [userId], references: [userId])
+  task   Task   @relation(fields: [taskId], references: [taskId])
 
   @@unique([userId, taskId], name: "UniqueUserTask")
 }

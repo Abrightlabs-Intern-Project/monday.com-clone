@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-monday-dev-9271b-authRole",
+      "UnauthRoleArn": "arn:aws:iam::730335470910:role/amplify-monday-dev-9271b-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::730335470910:role/amplify-monday-dev-9271b-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-monday-dev-9271b-deployment",
+      "UnauthRoleName": "amplify-monday-dev-9271b-unauthRole",
+      "StackName": "amplify-monday-dev-9271b",
+      "StackId": "arn:aws:cloudformation:us-east-1:730335470910:stack/amplify-monday-dev-9271b/eb364d30-2e5f-11ef-9970-1213dedda40f",
+      "AmplifyAppId": "d2j7hnawhut666"
+    },
+    "categories": {
+      "auth": {
+        "monday252a9b6f": {}
+      }
+    }
+  }
+}

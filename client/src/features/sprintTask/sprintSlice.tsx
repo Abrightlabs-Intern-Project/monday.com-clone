@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit";
 import { SprintModal } from "../../interfaces/sprintModal";
-import sprint from "../../components/main/sprint";
 
 const initialState: SprintModal[] = [];
 

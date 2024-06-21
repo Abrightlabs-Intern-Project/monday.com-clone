@@ -18,7 +18,7 @@ export class TasksService {
   }
 
   async findAll(): Promise<Task[]> {
-    return this.prisma.task.findMany(); // Retrieves all tasks from the database
+    return this.prisma.task.findMany();
   }
 
   async findOne(id: string): Promise<Task | null> {
@@ -44,10 +44,29 @@ export class TasksService {
     await this.prisma.taskUser.deleteMany({
       where: { taskId: taskId },
     });
-    // Delete the task from Task table
+
     await this.prisma.task.delete({
       where: { taskId: taskId },
     });
     return true;
+  }
+  async addUser(data: { userId: string; taskId: string }) {
+    const { userId, taskId } = data;
+    const user = await this.prisma.user.findUnique({ where: { userId } });
+    const task = await this.prisma.task.findUnique({ where: { taskId } });
+
+    if (!user || !task) {
+      throw new Error('User or Task not found');
+    }
+    return await this.prisma.taskUser.create({
+      data: {
+        userId,
+        taskId,
+      },
+    });
+  }
+
+  async getSprintTasks(sprintId: string) {
+    return await this.prisma.task.findMany({ where: { sprintId } });
   }
 }

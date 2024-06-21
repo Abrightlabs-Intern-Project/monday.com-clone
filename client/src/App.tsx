@@ -174,29 +174,35 @@ import Mywork from "./pages/mywork";
 import Sprint from "./pages/sprint";
 import Task from "./pages/task";
 import Header from "./components/dev/header";
+import "@aws-amplify/ui-react/styles.css";
+import { Authenticator } from "@aws-amplify/ui-react";
 
 const App = () => {
   return (
-    <Router>
-      <div className="container-fluid ">
-        <div className="row">
-          <Header />
-        </div>
-        <div className="row bg-white">
-          <div className="col-2 p-0">
-            <Linker />
+    <Authenticator>
+      {({ signOut, user }) => (
+        <Router>
+          <div className="container-fluid ">
+            <div className="row">
+              <Header />
+            </div>
+            <div className="row bg-white">
+              <div className="col-2 p-0">
+                <Linker />
+              </div>
+              <div className="col-10 height">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  {/* <Route path="/work" element={<Mywork />} /> */}
+                  <Route path="/task" element={<Task />} />
+                  <Route path="/sprint" element={<Sprint />} />
+                </Routes>
+              </div>
+            </div>
           </div>
-          <div className="col-10 height">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/work" element={<Mywork />} />
-              <Route path="/task" element={<Task />} />
-              <Route path="/sprint" element={<Sprint />} />
-            </Routes>
-          </div>
-        </div>
-      </div>
-    </Router>
+        </Router>
+      )}
+    </Authenticator>
   );
 };
 

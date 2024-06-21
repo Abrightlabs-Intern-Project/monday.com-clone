@@ -7,7 +7,7 @@ const SprintHolder = () => {
   return (
     <div className="text-white">
       <SprintHeader />
-      <SprintBody />
+      {/* <SprintBody /> */}
       <SprintTable />
     </div>
   );

@@ -14,10 +14,7 @@ import { SprintsModule } from './sprints/sprints.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-    }),
+
     TasksModule,
     UsersModule,
     SprintsModule,

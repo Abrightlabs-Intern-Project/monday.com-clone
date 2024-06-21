@@ -12,6 +12,10 @@ import {
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
+interface Details {
+  signOut: any;
+  user: any;
+}
 const Header = () => {
   const [show, setShow] = useState<boolean>(false);
   return (

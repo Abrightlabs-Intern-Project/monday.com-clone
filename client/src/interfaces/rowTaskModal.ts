@@ -1,5 +1,6 @@
 export interface RowTask {
   id?: any;
+  name?: string;
   task?: string;
   owner?: string;
   status?: string;

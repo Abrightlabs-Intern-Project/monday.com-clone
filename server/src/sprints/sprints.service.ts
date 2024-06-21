@@ -7,8 +7,19 @@ import { UpdateSprintInput } from './dto/update-sprint.input';
 export class SprintsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createSprint(data: CreateSprintInput): Promise<Sprint> {
-    return this.prisma.sprint.create({ data, include: { tasks: true } });
+  async createSprint(data: CreateSprintInput): Promise<string> {
+    const sprint = await this.prisma.sprint.create({
+      data: {
+        name: 'New sprint',
+        goals: '',
+        startDate: new Date(data.startDate),
+        endDate: new Date(data.endDate),
+      },
+      include: {
+        tasks: true,
+      },
+    });
+    return sprint.sprintId;
   }
 
   async findAllSprints(): Promise<Sprint[]> {
@@ -28,18 +39,23 @@ export class SprintsService {
   ): Promise<Sprint> {
     return this.prisma.sprint.update({
       where: { sprintId },
-      data,
-      include: { tasks: true },
+      data: {
+        name: data.name,
+        goals: data.goals,
+        startDate: new Date(data.startDate),
+        endDate: new Date(data.endDate),
+      },
     });
   }
 
   async deleteSprint(sprintId: string) {
-    await this.prisma.task.deleteMany({
+    const res = await this.prisma.task.deleteMany({
       where: { sprintId: sprintId },
     });
-
+    console.log(res);
     return this.prisma.sprint.delete({
       where: { sprintId: sprintId },
+      include: { tasks: true },
     });
   }
 }
