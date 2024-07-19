@@ -18,10 +18,11 @@ export class CreateTaskInput {
 
   @Field()
   status: string;
-
+  @Field()
+  actualSP?: string;
   @Field(() => [String], { nullable: true })
   userId?: [string];
 
   @Field(() => String, { nullable: true })
-  sprintId: string;
+  sprintId?: string;
 }

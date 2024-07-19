@@ -1,5 +1,8 @@
 import styled from "styled-components";
 
+interface TableCellProps {
+  bgColor: string;
+}
 export const TableContainer = styled.div`
   margin-left: 20px;
   margin-right: 20px;
@@ -16,10 +19,10 @@ export const TableHeader = styled.th`
   font-size: small;
   background-color: rgb(48, 50, 78);
   color: white;
-  padding: 5px;
+  padding: 2px;
   border: 1px solid #444;
   text-align: center;
-  width: 15%; /* Adjust as necessary to fit your design */
+  width: 10%; /* Adjust as necessary to fit your design */
 `;
 
 export const Checkbox = styled.th`
@@ -30,18 +33,18 @@ export const Checkbox = styled.th`
   padding: 5px;
   border: 1px solid #444;
   text-align: center;
-  width: 5%;
+  width: 0.5%;
 `;
 export const TableRow = styled.tr``;
 
-export const TableCell = styled.td`
+export const TableCell = styled.td<TableCellProps>`
   font-weight: 100;
   font-size: small;
   color: white;
-  padding: 5px;
+  padding: 1px;
   border: 1px solid #444;
   text-align: center;
-  background-color: rgb(48, 50, 78);
+  background-color: ${(props) => props.bgColor};
   width: 15%; /* Ensure consistent width across cells */
 `;
 
@@ -85,4 +88,26 @@ export const TextArea = styled.textarea`
   font-size: 14px;
   resize: vertical;
   box-sizing: border-box;
+`;
+
+export const SpecialCheckbox = styled.th`
+  font-weight: 100;
+  font-size: small;
+  background-color: rgb(48, 50, 78);
+  color: white;
+  padding: 5px;
+  border: 1px solid #444;
+  text-align: center;
+  width: 1px;
+`;
+
+export const UserHeader = styled.th`
+  font-weight: 100;
+  font-size: small;
+  background-color: rgb(48, 50, 78);
+  color: white;
+  padding: 5px;
+  border: 1px solid #444;
+  text-align: center;
+  width: 2%;
 `;

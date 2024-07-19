@@ -13,7 +13,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { addSprint } from "../../features/sprintTask/sprintSlice";
 import { useDispatch } from "react-redux";
 
 const SprintBody = () => {
@@ -24,14 +23,14 @@ const SprintBody = () => {
   };
 
   const handleAddSprint = () => {
-    dispatch(
-      addSprint({
-        name: "New sprint",
-        goals: "",
-        startdate: "",
-        endDate: "",
-      })
-    );
+    // dispatch(
+    //   addSprint({
+    //     name: "New sprint",
+    //     goals: "",
+    //     startdate: "",
+    //     endDate: "",
+    //   })
+    // );
   };
   return (
     <div className="container">

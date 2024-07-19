@@ -5,7 +5,7 @@ import SprintBody from "./sprintBody";
 
 const SprintHolder = () => {
   return (
-    <div className="text-white">
+    <div className="text-white sprintHolder">
       <SprintHeader />
       {/* <SprintBody /> */}
       <SprintTable />

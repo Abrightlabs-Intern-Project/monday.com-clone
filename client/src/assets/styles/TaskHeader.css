@@ -1,0 +1,9 @@
+.TaskHolder,
+.sprintHolder {
+  background-color: rgb(24, 27, 52) !important;
+  height: 100vh;
+}
+.task-manager {
+  background-color: rgb(24, 27, 52) !important;
+  /* position: relative; */
+}

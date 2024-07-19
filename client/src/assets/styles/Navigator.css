@@ -1,0 +1,147 @@
+.Navigator {
+  background-color: #212540;
+  height: 100vh;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 300px;
+  color: #d5d8df;
+}
+
+.Header {
+  padding: 12px;
+  background-color: inherit;
+  border-bottom: 1px solid #4b4e69;
+}
+.HeaderContent {
+  background-color: inherit;
+  padding: 5px 5px 5px 0px;
+  border-radius: 5px;
+  margin-left: -3px;
+}
+
+.spanHeading {
+  background-color: inherit;
+  font-size: 12px;
+}
+
+.HeaderContent:hover {
+  background-color: #3c405a;
+}
+
+.Body {
+  background-color: #212540;
+  padding: 12px;
+}
+
+.WorkSpace {
+  cursor: pointer;
+  border-radius: 3px;
+  margin-left: 4px;
+  padding: 2px;
+  background-color: #212540;
+  position: relative;
+}
+
+.WorkSpace:hover {
+  background-color: #3c405a;
+}
+
+.Team {
+  background: #595ad4;
+  padding: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Tt {
+  font-size: 12px;
+  background-color: inherit;
+}
+
+.BodyIcon {
+  background-color: inherit;
+}
+
+.KeyArrow {
+  background-color: inherit;
+}
+
+.KeyArrow:hover {
+  background-color: #3c405a;
+}
+
+.BarHolder {
+  background-color: inherit;
+  width: 80%;
+  border: 1px solid #4b4e69;
+  border-radius: 5px;
+}
+.SearchSpace {
+  background-color: #212540;
+}
+.SearchBar {
+  width: 100%;
+  background-color: inherit;
+  border: none;
+  height: 30px;
+}
+
+.AddIcon {
+  border: 1px solid #3c405a;
+  border-radius: 3px;
+  width: 30px;
+  height: 30px;
+  background-color: #212540;
+}
+.AddIcon:hover {
+  cursor: pointer;
+  background-color: #3c405a;
+}
+.BarHolder:hover {
+  border: 1px solid white;
+}
+.teamHolder {
+  background-color: inherit;
+}
+.teamHolder:hover {
+  cursor: pointer;
+  background-color: #3c405a;
+}
+
+.teamContent {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.teamSubContent {
+  margin-left: 20px;
+  background-color: inherit;
+}
+
+.teamItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+  padding: 5px;
+  border-radius: 3px;
+  background-color: inherit;
+}
+.teamItem:hover {
+  background-color: #3c405a;
+}
+.teamText {
+  margin-left: 10px;
+  font-size: 12px;
+  background-color: inherit;
+}
+.head {
+  background-color: inherit;
+}
+.teamItem.active,
+.HeaderContent.active {
+  background-color: #013c29;
+}

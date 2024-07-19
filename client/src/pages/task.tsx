@@ -5,7 +5,11 @@ const Task = () => {
   return (
     <div
       className=""
-      style={{ background: "rgb(28, 31, 59)", height: "100vh" }}
+      style={{
+        height: "100vh",
+        marginRight: "-10px",
+        borderRadius: "5px",
+      }}
     >
       <TaskHolder />
     </div>
@@ -13,3 +17,5 @@ const Task = () => {
 };
 
 export default Task;
+
+// background: "rgb(24, 27, 52)"

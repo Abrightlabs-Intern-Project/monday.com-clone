@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Task } from '../../tasks/entities/task.entity'; // Import Task entity
-
+import { Task } from '../../tasks/entities/task.entity';
+import { Company } from '../../companies/entities/company.entity';
 @ObjectType()
 export class Sprint {
   @Field()
@@ -20,4 +20,6 @@ export class Sprint {
 
   @Field(() => [Task], { nullable: true })
   tasks?: Task[];
+  @Field({ nullable: true })
+  company?: string;
 }

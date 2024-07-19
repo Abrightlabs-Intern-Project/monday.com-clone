@@ -8,12 +8,14 @@ export class SprintsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createSprint(data: CreateSprintInput): Promise<string> {
+    console.log(data.companyId);
     const sprint = await this.prisma.sprint.create({
       data: {
         name: 'New sprint',
         goals: '',
         startDate: new Date(data.startDate),
         endDate: new Date(data.endDate),
+        companyId: data.companyId,
       },
       include: {
         tasks: true,

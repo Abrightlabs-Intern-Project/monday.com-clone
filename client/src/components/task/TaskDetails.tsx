@@ -24,7 +24,7 @@ const TaskDetail: React.FC<TaskDetailProps> = ({
   const [editingField, setEditingField] = useState<string | null>(null);
 
   const handleInputChange = (field: keyof Task, value: string) => {
-    handleChange(task.id, field, value);
+    handleChange(task.taskId, field, value);
   };
 
   const toggleEditing = (field: keyof Task, isEditing: boolean) => {

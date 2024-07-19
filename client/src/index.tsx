@@ -2,11 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
+import { TaskProvider } from "./context/TaskContext";
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { Provider } from "react-redux";
-import store from "./app/store";
 import { Amplify } from "aws-amplify";
+
 import config from "./aws-exports";
 Amplify.configure(config);
 const root = ReactDOM.createRoot(
@@ -14,10 +13,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
+    <TaskProvider>
       <App />
-    </Provider>
+    </TaskProvider>
   </React.StrictMode>
 );
-
-reportWebVitals();

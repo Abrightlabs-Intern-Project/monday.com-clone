@@ -1,4 +1,8 @@
-import React, { useState, ChangeEvent, KeyboardEvent } from "react";
+import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from "react";
+import axios from "axios";
+import "../../assets/styles/sprintBody.css";
+import "../../assets/styles/TaskHeader.css";
+
 import {
   faAngleDown,
   faUserCircle,
@@ -8,10 +12,10 @@ import {
   faSort,
   faEyeSlash,
   faLayerGroup,
-  faArrowDown,
   faArrowsUpDownLeftRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
   Table,
   TableContainer,
@@ -26,22 +30,25 @@ import TaskStatusList from "./TaskStatusList";
 import TaskPriorityList from "./TaskPriorityList";
 import TaskTypeList from "./TaskTypeList";
 import TaskDetail from "./TaskDetails";
-import "../../assets/styles/sprintBody.css";
+import UsersToTask from "./UsersToTask";
 
+import {
+  statusColors,
+  priorityColors,
+  typeColors,
+} from "../../mockdata/backgroundColor";
+import { taskList } from "../../mockdata/Task";
 export interface Task {
-  id: string;
+  taskId: string;
   name: string;
-  owner: string;
-  task?: string;
+  owner?: string;
   type: string;
   priority: string;
-  itemId: string;
-  status?: string;
-  actualSP?: string;
+  status: string;
 }
 
 const TaskManager: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(taskList);
   const [editing, setEditing] = useState<{ [key: string]: boolean }>({});
   const [selectedTasks, setSelectedTasks] = useState<{
     [key: string]: boolean;
@@ -59,18 +66,72 @@ const TaskManager: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleAddTask = () => {
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/tasks");
+        setTasks(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the tasks!", error);
+      }
+    };
+    fetchTasks();
+  }, []);
+
+  const handleAddTask = async () => {
     const newTask: Task = {
-      id: Date.now().toString(),
+      taskId: "",
       name: "New task",
       owner: "",
-      task: "New Task",
+      status: "",
       type: "",
       priority: "",
-      itemId: "",
-      actualSP: "",
     };
-    setTasks([...tasks, newTask]);
+    setTasks((prevTasks) => [...prevTasks, newTask]);
+
+    // try {
+    //   const response = await axios.post("http://localhost:3000/tasks", newTask);
+    //   newTask.taskId = response.data;
+    //   setTasks((prevTasks) => [...prevTasks, newTask]);
+    //   console.log(response.data);
+    // } catch (error) {
+    //   console.error("There was an error adding the task!", error);
+    // }
+  };
+
+  const handleDeleteSelected = async () => {
+    // const idsToDelete = Object.keys(selectedTasks).filter(
+    //   (id) => selectedTasks[id]
+    // );
+    setTasks((prevTasks) =>
+      prevTasks.filter((task) => !selectedTasks[task.taskId])
+    );
+    // try {
+    //   await axios.delete("http://localhost:3000/tasks", {
+    //     data: { ids: idsToDelete },
+    //   });
+    //   setTasks((prevTasks) =>
+    //     prevTasks.filter((task) => !selectedTasks[task.taskId])
+    //   );
+    //   setSelectedTasks({});
+    // } catch (error) {
+    //   console.error("There was an error deleting the tasks!", error);
+    // }
+  };
+  const handleChange = async (id: string, field: keyof Task, value: string) => {
+    const updatedTasks = tasks.map((task) =>
+      task.taskId === id ? { ...task, [field]: value } : task
+    );
+    setTasks(updatedTasks);
+
+    // const updatedTask = updatedTasks.find((task) => task.taskId === id);
+    // if (updatedTask) {
+    //   try {
+    //     await axios.put(`http://localhost:3000/tasks/${id}`, updatedTask);
+    //   } catch (error) {
+    //     console.error("There was an error updating the task!", error);
+    //   }
+    // }
   };
 
   const handleCheckboxChange = (id: string) => {
@@ -78,17 +139,6 @@ const TaskManager: React.FC = () => {
       ...selectedTasks,
       [id]: !selectedTasks[id],
     });
-  };
-
-  const handleDeleteSelected = () => {
-    setTasks(tasks.filter((task) => !selectedTasks[task.id]));
-    setSelectedTasks({});
-  };
-
-  const handleChange = (id: string, field: keyof Task, value: string) => {
-    setTasks(
-      tasks.map((task) => (task.id === id ? { ...task, [field]: value } : task))
-    );
   };
 
   const toggleEditing = (id: string, field: keyof Task, isEditing: boolean) => {
@@ -130,22 +180,22 @@ const TaskManager: React.FC = () => {
 
   return (
     <div className="task-manager">
-      <div className="container text-white">
+      <div className="container text-white task-manager">
         <div className="row mb-3">
-          <div className="col">
-            <div className="sprinthome">
+          <div className="col task-manager">
+            <div className="sprinthome task-manager">
               <FontAwesomeIcon icon={faHome} /> Main Table
             </div>
           </div>
-          <div className="row mt-3 ">
-            <div className="col d-flex">
+          <div className="row task-manager ">
+            <div className="col d-flex task-manager mt-3">
               <div className="sprintButton">
                 <button className="" onClick={handleAddTask}>
                   New Task
                   <FontAwesomeIcon icon={faAngleDown} className="buttonIcon" />
                 </button>
               </div>
-              <div className="searchSprint ms-3">
+              <div className="searchSprint ms-3 task-manager">
                 <button className="searchSprintButton" onClick={toggleSearch}>
                   <FontAwesomeIcon icon={faSearch} className="iconSprint" />
                 </button>
@@ -196,199 +246,188 @@ const TaskManager: React.FC = () => {
           </div>
         </div>
       </div>
-      <TableContainer>
-        <Table>
-          <thead>
-            <TableRow>
-              <Checkbox>
-                <input type="checkbox" />
-              </Checkbox>
-              <TableHeader>Task</TableHeader>
-              <TableHeader>Owner</TableHeader>
-              <TableHeader>Status</TableHeader>
-              <TableHeader>Priority</TableHeader>
-              <TableHeader>Type</TableHeader>
-              {/* <TableHeader>Actual SP</TableHeader> */}
-              <TableHeader>Item ID</TableHeader>
-            </TableRow>
-          </thead>
-          <tbody>
-            {tasks.map((task) => (
-              <TableRow key={task.id}>
+      <div className="px-3" style={{ backgroundColor: "rgb(24, 27, 52)" }}>
+        <TableContainer>
+          <Table>
+            <thead>
+              <TableRow>
                 <Checkbox>
-                  <input
-                    type="checkbox"
-                    checked={!!selectedTasks[task.id]}
-                    onChange={() => handleCheckboxChange(task.id)}
-                  />
+                  <input type="checkbox" />
                 </Checkbox>
-                {/* <TableCell>
-                  <div className="d-flex justify-item-center">
-                    {editing[`${task.id}-task`] ? (
-                      <Input
-                        type="text"
-                        value={task.task}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                          handleChange(task.id, "task", e.target.value)
+                <TableHeader>Task</TableHeader>
+                <TableHeader>Owner</TableHeader>
+                <TableHeader>Status</TableHeader>
+                <TableHeader>Priority</TableHeader>
+                <TableHeader>Type</TableHeader>
+                {/* <TableHeader>Actual SP</TableHeader> */}
+                <TableHeader>Item ID</TableHeader>
+              </TableRow>
+            </thead>
+            <tbody>
+              {tasks.map((task) => (
+                <TableRow key={task.taskId}>
+                  <Checkbox>
+                    <input
+                      type="checkbox"
+                      checked={!!selectedTasks[task.taskId]}
+                      onChange={() => handleCheckboxChange(task.taskId)}
+                    />
+                  </Checkbox>
+                  <TableCell bgColor="rgb(48, 50, 78)">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className="d-flex align-items-center">
+                        {editing[`${task.taskId}-name`] ? (
+                          <Input
+                            type="text"
+                            value={task.name}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                              handleChange(task.taskId, "name", e.target.value)
+                            }
+                            onBlur={() =>
+                              toggleEditing(task.taskId, "name", false)
+                            }
+                            onKeyPress={(
+                              e: KeyboardEvent<HTMLInputElement>
+                            ) => {
+                              if (e.key === "Enter") {
+                                toggleEditing(task.taskId, "name", false);
+                              }
+                            }}
+                          />
+                        ) : (
+                          <span
+                            onClick={() =>
+                              toggleEditing(task.taskId, "name", true)
+                            }
+                          >
+                            {task.name || "New task"}
+                          </span>
+                        )}
+                      </div>
+                      <div
+                        className="ms-2"
+                        onClick={() =>
+                          toggleEditing(
+                            task.taskId,
+                            "name",
+                            !editing[`${task.taskId}-task`]
+                          )
                         }
-                        onBlur={() => toggleEditing(task.id, "task", false)}
-                        onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => {
-                          if (e.key === "Enter") {
-                            toggleEditing(task.id, "task", false);
-                          }
+                      >
+                        <FontAwesomeIcon icon={faArrowsUpDownLeftRight} />
+                      </div>
+                    </div>
+                    {editing[`${task.taskId}-task`] && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          zIndex: 10,
+                          width: "70vw",
+                          height: "80%",
+                          marginLeft: "50px",
                         }}
-                      />
+                      >
+                        <TaskDetail
+                          taskName={task.name}
+                          task={task}
+                          onSelectPriority={onSelectPriority}
+                          onSelectStatus={onSelectStatus}
+                          onSelectType={onSelectType}
+                          handleChange={handleChange}
+                        />
+                      </div>
+                    )}
+                  </TableCell>
+
+                  <Checkbox>
+                    {currentEditingTaskId === task.taskId &&
+                    currentEditingField === "owner" &&
+                    editing[`${task.taskId}-owner`] ? (
+                      <>
+                        <span
+                          onClick={() =>
+                            toggleEditing(task.taskId, "owner", false)
+                          }
+                        >
+                          {<FontAwesomeIcon icon={faUserCircle} />}
+                        </span>
+                        <div
+                          style={{
+                            position: "absolute",
+                            zIndex: 100,
+                            marginTop: "25px",
+                            width: "15%",
+                          }}
+                        >
+                          <UsersToTask taskId={task.taskId} />
+                        </div>
+                      </>
                     ) : (
                       <span
-                        onClick={() => toggleEditing(task.id, "task", true)}
+                        onClick={() =>
+                          toggleEditing(task.taskId, "owner", true)
+                        }
                       >
-                        {task.task || "New task"}
+                        {<FontAwesomeIcon icon={faUserCircle} />}
                       </span>
                     )}
-                    <div
-                      className=""
-                      onClick={() =>
-                        toggleEditing(
-                          task.id,
-                          "task",
-                          !editing[`${task.id}-task`]
-                        )
-                      }
-                      style={{ top: "100", left: "0" }}
-                    >
-                      <FontAwesomeIcon icon={faAngleDown} />
-                    </div>
-                  </div>
-                  {editing[`${task.id}-task`] && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        zIndex: 10,
-                        width: "70vw",
-                        height: "60%",
-                      }}
-                    >
-                      <TaskDetail
-                        taskName={task.task}
-                        task={task}
-                        onSelectPriority={onSelectPriority}
-                        onSelectStatus={onSelectStatus}
-                        onSelectType={onSelectType}
-                        handleChange={handleChange}
-                      />
-                    </div>
-                  )}
-                </TableCell> */}
-                <TableCell>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <div className="d-flex align-items-center">
-                      {editing[`${task.id}-task`] ? (
-                        <Input
-                          type="text"
-                          value={task.task}
-                          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                            handleChange(task.id, "task", e.target.value)
-                          }
-                          onBlur={() => toggleEditing(task.id, "task", false)}
-                          onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => {
-                            if (e.key === "Enter") {
-                              toggleEditing(task.id, "task", false);
-                            }
-                          }}
-                        />
-                      ) : (
-                        <span
-                          onClick={() => toggleEditing(task.id, "task", true)}
-                        >
-                          {task.task || "New task"}
-                        </span>
-                      )}
-                    </div>
-                    <div
-                      className="ms-2"
-                      onClick={() =>
-                        toggleEditing(
-                          task.id,
-                          "task",
-                          !editing[`${task.id}-task`]
-                        )
-                      }
-                    >
-                      <FontAwesomeIcon icon={faArrowsUpDownLeftRight} />
-                    </div>
-                  </div>
-                  {editing[`${task.id}-task`] && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        zIndex: 10,
-                        width: "70vw",
-                        height: "80%",
-                        marginLeft: "50px",
-                      }}
-                    >
-                      <TaskDetail
-                        taskName={task.task}
-                        task={task}
-                        onSelectPriority={onSelectPriority}
-                        onSelectStatus={onSelectStatus}
-                        onSelectType={onSelectType}
-                        handleChange={handleChange}
-                      />
-                    </div>
-                  )}
-                </TableCell>
-
-                <Checkbox>
-                  <div className="fs-5">
-                    <FontAwesomeIcon icon={faUserCircle} />
-                  </div>
-                </Checkbox>
-                <TableCell>
-                  {currentEditingTaskId === task.id &&
-                  currentEditingField === "status" &&
-                  editing[`${task.id}-status`] ? (
-                    <div style={{ position: "absolute", zIndex: 10 }}>
-                      <TaskStatusList onSelect={onSelectStatus} />
-                    </div>
-                  ) : (
-                    <span
-                      onClick={() => toggleEditing(task.id, "status", true)}
-                    >
-                      {task.status || "Missing"}
-                    </span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {currentEditingTaskId === task.id &&
-                  currentEditingField === "priority" &&
-                  editing[`${task.id}-priority`] ? (
-                    <div style={{ position: "absolute", zIndex: 10 }}>
-                      <TaskPriorityList onSelect={onSelectPriority} />
-                    </div>
-                  ) : (
-                    <span
-                      onClick={() => toggleEditing(task.id, "priority", true)}
-                    >
-                      {task.priority || "Missing"}
-                    </span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {currentEditingTaskId === task.id &&
-                  currentEditingField === "type" &&
-                  editing[`${task.id}-type`] ? (
-                    <div style={{ position: "absolute", zIndex: 10 }}>
-                      <TaskTypeList onSelect={onSelectType} />
-                    </div>
-                  ) : (
-                    <span onClick={() => toggleEditing(task.id, "type", true)}>
-                      {task.type || "Missing"}
-                    </span>
-                  )}
-                </TableCell>
-                {/* <TableCell>
-                  {editing[`${task.id}-actualSP`] ? (
+                  </Checkbox>
+                  <TableCell bgColor={statusColors[task.status]}>
+                    {currentEditingTaskId === task.taskId &&
+                    currentEditingField === "status" &&
+                    editing[`${task.taskId}-status`] ? (
+                      <div style={{ position: "absolute", zIndex: 10 }}>
+                        <TaskStatusList onSelect={onSelectStatus} />
+                      </div>
+                    ) : (
+                      <span
+                        onClick={() =>
+                          toggleEditing(task.taskId, "status", true)
+                        }
+                        style={{ background: `${statusColors[task.status]}` }}
+                      >
+                        {task.status || "Missing"}
+                      </span>
+                    )}
+                  </TableCell>
+                  <TableCell bgColor={priorityColors[task.priority]}>
+                    {currentEditingTaskId === task.taskId &&
+                    currentEditingField === "priority" &&
+                    editing[`${task.taskId}-priority`] ? (
+                      <div style={{ position: "absolute", zIndex: 10 }}>
+                        <TaskPriorityList onSelect={onSelectPriority} />
+                      </div>
+                    ) : (
+                      <span
+                        onClick={() =>
+                          toggleEditing(task.taskId, "priority", true)
+                        }
+                        style={{
+                          background: `${priorityColors[task.priority]}`,
+                        }}
+                      >
+                        {task.priority || "Missing"}
+                      </span>
+                    )}
+                  </TableCell>
+                  <TableCell bgColor={typeColors[task.type]}>
+                    {currentEditingTaskId === task.taskId &&
+                    currentEditingField === "type" &&
+                    editing[`${task.taskId}-type`] ? (
+                      <div style={{ position: "absolute", zIndex: 10 }}>
+                        <TaskTypeList onSelect={onSelectType} />
+                      </div>
+                    ) : (
+                      <span
+                        onClick={() => toggleEditing(task.taskId, "type", true)}
+                        style={{ background: `${typeColors[task.type]}` }}
+                      >
+                        {task.type || "Missing"}
+                      </span>
+                    )}
+                  </TableCell>
+                  {/* <TableCell>
+                  {editing[${task.id}-actualSP] ? (
                     <Input
                       type="text"
                       value={task.task}
@@ -410,15 +449,16 @@ const TaskManager: React.FC = () => {
                     </span>
                   )}
                 </TableCell> */}
-                <TableCell>{task.id}</TableCell>
-              </TableRow>
-            ))}
-          </tbody>
-        </Table>
-        {isAnyTaskSelected && (
-          <Button onClick={handleDeleteSelected}>Delete</Button>
-        )}
-      </TableContainer>
+                  <TableCell bgColor="rgb(48, 50, 78)">{task.taskId}</TableCell>
+                </TableRow>
+              ))}
+            </tbody>
+          </Table>
+          {isAnyTaskSelected && (
+            <Button onClick={handleDeleteSelected}>Delete</Button>
+          )}
+        </TableContainer>
+      </div>
     </div>
   );
 };

@@ -22,6 +22,9 @@ export class Task {
   @Field()
   status: string;
 
+  @Field()
+  actualSP: string;
+
   @Field(() => Sprint, { nullable: true })
   sprint?: Sprint;
 

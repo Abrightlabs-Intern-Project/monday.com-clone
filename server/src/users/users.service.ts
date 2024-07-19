@@ -12,7 +12,6 @@ export class UsersService {
         firstName: data.firstName,
         lastName: data.lastName ? data.lastName : null,
         email: data.email,
-        password: data.password,
       },
       include: {
         tasks: true,

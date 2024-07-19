@@ -16,4 +16,6 @@ export class CreateSprintInput {
 
   @Field(() => [String], { nullable: true })
   taskIds?: string[];
+  @Field({ nullable: true })
+  companyId?: string;
 }

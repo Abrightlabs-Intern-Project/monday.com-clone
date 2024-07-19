@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 import { SprintsModule } from './sprints/sprints.module';
+import { CompaniesModule } from './companies/companies.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SprintsModule } from './sprints/sprints.module';
     TasksModule,
     UsersModule,
     SprintsModule,
+    CompaniesModule,
   ],
   providers: [PrismaService],
 })

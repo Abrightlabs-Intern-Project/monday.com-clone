@@ -8,13 +8,28 @@ import { Task } from '@prisma/client';
 export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
   async createTask(data: CreateTaskInput) {
-    const { sprintId, ...taskData } = data;
-    return await this.prisma.task.create({
+    //console.log(data);
+    const { sprintId } = data;
+    const sprint = await this.prisma.sprint.findUnique({
+      where: { sprintId },
+    });
+    if (!sprint) {
+      return new Error('Sprint Not Found');
+    }
+    // console.log(sprint);
+    const newTask = await this.prisma.task.create({
       data: {
-        ...taskData,
-        sprint: { connect: { sprintId: sprintId } },
+        name: data.name,
+        status: data.status,
+        priority: data.priority,
+        type: data.type,
+        sprint: {
+          connect: { sprintId: sprintId },
+        },
       },
     });
+    //console.log(newTask);
+    return newTask.taskId;
   }
 
   async findAll(): Promise<Task[]> {
@@ -25,19 +40,23 @@ export class TasksService {
     const task = await this.prisma.task.findUnique({ where: { taskId: id } });
     return task;
   }
-  async updateTask(
-    id: string,
-    updateTaskInput: UpdateTaskInput,
-  ): Promise<Task> {
+  async updateTask(id: string, data: UpdateTaskInput): Promise<Task> {
     const task = await this.prisma.task.findUnique({ where: { taskId: id } });
 
     if (!task) {
       throw new Error(`Task with ID ${id} not found.`);
     }
-
+    // console.log(task, data);
     return this.prisma.task.update({
       where: { taskId: id },
-      data: updateTaskInput,
+      data: {
+        taskId: '164028cc-1ded-4cc4-8b96-a93fa0809461',
+        name: data.name,
+        description: data.description,
+        type: data.type,
+        priority: data.priority,
+        status: data.status,
+      },
     });
   }
   async deleteTask(taskId: string) {
