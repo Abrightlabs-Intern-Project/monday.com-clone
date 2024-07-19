@@ -6,7 +6,6 @@ interface TableCellProps {
 export const TableContainer = styled.div`
   margin-left: 20px;
   margin-right: 20px;
-  overflow-x: auto;
 `;
 
 export const Table = styled.table`

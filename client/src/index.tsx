@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import { TaskProvider } from "./context/TaskContext";
+import { SprintProvider } from "./context/SprintContext";
 import App from "./App";
 import { Amplify } from "aws-amplify";
 
@@ -14,7 +15,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <TaskProvider>
-      <App />
+      <SprintProvider>
+        <App />
+      </SprintProvider>
     </TaskProvider>
   </React.StrictMode>
 );

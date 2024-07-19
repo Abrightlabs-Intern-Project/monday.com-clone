@@ -1,14 +1,16 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import { Task } from "../interfaces/Task";
-interface TaskContext {
+import { taskList } from "../mockdata/Task";
+
+interface TaskContextType {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
-const TaskContext = createContext<TaskContext | undefined>(undefined);
+const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
 const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(taskList);
 
   return (
     <TaskContext.Provider value={{ tasks, setTasks }}>
@@ -16,8 +18,13 @@ const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     </TaskContext.Provider>
   );
 };
+
 const useTask = () => {
-  return useContext(TaskContext);
+  const context = useContext(TaskContext);
+  if (!context) {
+    throw new Error("useTask must be used within a TaskProvider");
+  }
+  return context;
 };
 
 export { TaskProvider, useTask };

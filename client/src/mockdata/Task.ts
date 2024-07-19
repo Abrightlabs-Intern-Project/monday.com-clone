@@ -11,8 +11,7 @@ function generateMockData(count: number): Task[] {
       owner: "",
       type: "Missing", // Type is set to "missing"
       priority: "Missing", // Priority is set to "missing"
-      itemId: "", // Not generated
-      status: "missing", // Status is set to "missing"
+      status: "", // Status is set to "missing"
     };
 
     mockTasks.push(task);

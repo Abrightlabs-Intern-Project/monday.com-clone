@@ -2,7 +2,8 @@ import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from "react";
 import axios from "axios";
 import "../../assets/styles/sprintBody.css";
 import "../../assets/styles/TaskHeader.css";
-
+import { Task } from "../../interfaces/Task";
+import { useTask } from "../../context/TaskContext";
 import {
   faAngleDown,
   faUserCircle,
@@ -37,18 +38,10 @@ import {
   priorityColors,
   typeColors,
 } from "../../mockdata/backgroundColor";
-import { taskList } from "../../mockdata/Task";
-export interface Task {
-  taskId: string;
-  name: string;
-  owner?: string;
-  type: string;
-  priority: string;
-  status: string;
-}
 
 const TaskManager: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>(taskList);
+  //const [tasks, setTasks] = useState<Task[]>(taskList);
+  const { tasks, setTasks } = useTask();
   const [editing, setEditing] = useState<{ [key: string]: boolean }>({});
   const [selectedTasks, setSelectedTasks] = useState<{
     [key: string]: boolean;
@@ -84,8 +77,8 @@ const TaskManager: React.FC = () => {
       name: "New task",
       owner: "",
       status: "",
-      type: "",
-      priority: "",
+      type: "Missing",
+      priority: "Missing",
     };
     setTasks((prevTasks) => [...prevTasks, newTask]);
 
@@ -327,14 +320,14 @@ const TaskManager: React.FC = () => {
                           marginLeft: "50px",
                         }}
                       >
-                        <TaskDetail
+                        {/* <TaskDetail
                           taskName={task.name}
                           task={task}
                           onSelectPriority={onSelectPriority}
                           onSelectStatus={onSelectStatus}
                           onSelectType={onSelectType}
                           handleChange={handleChange}
-                        />
+                        /> */}
                       </div>
                     )}
                   </TableCell>

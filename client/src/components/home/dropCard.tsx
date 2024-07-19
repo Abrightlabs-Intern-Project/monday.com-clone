@@ -4,7 +4,7 @@ import img from "../../assets/images/home-1.png";
 import dev from "../../assets/images/dev.jpeg";
 import crm from "../../assets/images/monday-crm.jpeg";
 import work from "../../assets/images/work.png";
-import { DropCardModal } from "../../interfaces/dropCardModal";
+import { DropCardModal } from "../../interfaces/DropCardModal";
 import { faFlipboard } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";

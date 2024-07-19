@@ -24,6 +24,8 @@ import {
   TextArea,
   Checkbox,
 } from "./SprintTableStyle";
+import { useSprint } from "../../context/SprintContext";
+import { Sprint } from "../../interfaces/Sprint";
 
 interface SprintModal {
   sprintId?: any;
@@ -35,43 +37,44 @@ interface SprintModal {
 }
 
 const SprintTable: React.FC = () => {
-  const [sprints, setSprints] = useState<SprintModal[]>([]);
+  const { sprints, setSprints } = useSprint();
   const [editing, setEditing] = useState<{ [key: string]: boolean }>({});
   const [selectedSprints, setSelectedSprints] = useState<{
     [key: string]: boolean;
   }>({});
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    fetchSprints();
-  }, []);
+  // useEffect(() => {
+  //   fetchSprints();
+  // }, []);
 
-  const fetchSprints = async () => {
-    try {
-      const response = await axios.get<SprintModal[]>(
-        "http://localhost:3000/sprints"
-      );
-      setSprints(response.data);
-    } catch (error) {
-      console.error("Error fetching sprints:", error);
-    }
-  };
+  // const fetchSprints = async () => {
+  //   try {
+  //     const response = await axios.get<SprintModal[]>(
+  //       "http://localhost:3000/sprints"
+  //     );
+  //     setSprints(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching sprints:", error);
+  //   }
+  // };
 
   const handleAddSprint = async () => {
     try {
-      const newSprint: SprintModal = {
+      const newSprint: Sprint = {
+        sprintId: `${Math.round(Math.random() * 1000)}`,
         name: "New sprint",
         goals: "",
         startDate: Date.now(),
         endDate: Date.now(),
-        companyId: "12345",
       };
-      const response = await axios.post<SprintModal>(
-        "http://localhost:3000/sprints",
-        newSprint
-      );
-      setSprints([...sprints, { ...newSprint, sprintId: response.data }]);
-      console.log(response.data);
+      // const response = await axios.post<SprintModal>(
+      //   "http://localhost:3000/sprints",
+      //   newSprint
+      // );
+      // setSprints([...sprints, { ...newSprint, sprintId: response.data }]);
+      //console.log(response.data);
+      setSprints((prevSprints) => [...prevSprints, newSprint]);
     } catch (error) {
       console.error("Error adding sprint:", error);
     }
@@ -89,11 +92,11 @@ const SprintTable: React.FC = () => {
       const idsToDelete = Object.keys(selectedSprints).filter(
         (id) => selectedSprints[id]
       );
-      await Promise.all(
-        idsToDelete.map((id) =>
-          axios.delete(`http://localhost:3000/sprints/${id}`)
-        )
-      );
+      // await Promise.all(
+      //   idsToDelete.map((id) =>
+      //     axios.delete(`http://localhost:3000/sprints/${id}`)
+      //   )
+      // );
       setSprints(sprints.filter((sprint) => !selectedSprints[sprint.sprintId]));
       setSelectedSprints({});
     } catch (error) {
@@ -114,7 +117,7 @@ const SprintTable: React.FC = () => {
 
   const handleUpdateSprint = async (id: any, updatedSprint: SprintModal) => {
     try {
-      await axios.put(`http://localhost:3000/sprints/${id}`, updatedSprint);
+      // await axios.put(`http://localhost:3000/sprints/${id}`, updatedSprint);
       const updatedSprints = sprints.map((sprint) =>
         sprint.sprintId === id ? { ...sprint, ...updatedSprint } : sprint
       );

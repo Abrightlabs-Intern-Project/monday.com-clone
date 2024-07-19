@@ -2,6 +2,7 @@ html,
 body {
   height: 100%;
   margin: 0;
+  overflow: hidden;
 }
 * {
   background-color: #292f4c;
@@ -11,5 +12,5 @@ body {
 }
 
 .height {
-  min-height: 100vh;
+  min-height: 101vh;
 }

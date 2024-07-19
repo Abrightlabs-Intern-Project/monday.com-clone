@@ -5,7 +5,7 @@ import TaskTypeList from "./TaskTypeList";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../assets/styles/taskDetail.css";
-import { Task } from "./taskTable";
+import { Task } from "../../interfaces/Task";
 
 interface TaskDetailProps {
   taskName: string | undefined;
