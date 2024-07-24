@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../assets/styles/Navigator.css";
 
 import CottageIcon from "@mui/icons-material/Cottage";
@@ -16,9 +16,10 @@ import HistoryIcon from "@mui/icons-material/History";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import RouteIcon from "@mui/icons-material/Route";
 import ViewInArIcon from "@mui/icons-material/ViewInAr";
-import { ClassNames } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
 
 const Navigator = () => {
+  const navigate = useNavigate();
   const [show, setShow] = useState<boolean>(true);
   const [active, setActive] = useState<string>("home");
   return (
@@ -28,7 +29,10 @@ const Navigator = () => {
           className={`d-flex align-items-center HeaderContent ${
             active === "home" ? "active" : ""
           }`}
-          onClick={() => setActive("home")}
+          onClick={() => {
+            setActive("home");
+            navigate("/");
+          }}
         >
           <CottageIcon
             sx={{
@@ -59,10 +63,10 @@ const Navigator = () => {
       </div>
       <div className="Body">
         <div className="WorkSpace d-flex justify-content-between align-items-center">
-          <div className="Team">
+          {/* <div className="Team">
             <span className="text-white Tt">M</span>
-          </div>
-          <span style={{ marginLeft: "-95px", background: "inherit" }}>
+          </div> */}
+          <span style={{ marginLeft: "0", background: "inherit" }}>
             My Team
           </span>
           <div className="BodyIcon d-flex justify-content-between align-items-center">
@@ -126,16 +130,22 @@ const Navigator = () => {
           <div className="teamSubContent">
             <div
               className={`teamItem ${active === "tasks" ? "active" : ""}`}
-              onClick={() => setActive("tasks")}
+              onClick={() => {
+                setActive("tasks");
+                navigate("/task");
+              }}
             >
               <SpaceDashboardIcon
                 sx={{ fontSize: "16px", background: "inherit" }}
               />
-              <span className="teamText">Task 1</span>
+              <span className="teamText">Task </span>
             </div>
             <div
               className={`teamItem ${active === "sprints" ? "active" : ""}`}
-              onClick={() => setActive("sprints")}
+              onClick={() => {
+                setActive("sprints");
+                navigate("/sprint");
+              }}
             >
               <RouteIcon sx={{ fontSize: "16px", background: "inherit" }} />
               <span className="teamText">Sprints</span>

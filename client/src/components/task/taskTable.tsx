@@ -1,5 +1,4 @@
-import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from "react";
-import axios from "axios";
+import React, { useState, ChangeEvent, KeyboardEvent } from "react";
 import "../../assets/styles/sprintBody.css";
 import "../../assets/styles/TaskHeader.css";
 import { Task } from "../../interfaces/Task";
@@ -16,7 +15,6 @@ import {
   faArrowsUpDownLeftRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import {
   Table,
   TableContainer,
@@ -30,17 +28,16 @@ import {
 import TaskStatusList from "./TaskStatusList";
 import TaskPriorityList from "./TaskPriorityList";
 import TaskTypeList from "./TaskTypeList";
-import TaskDetail from "./TaskDetails";
 import UsersToTask from "./UsersToTask";
-
 import {
   statusColors,
   priorityColors,
   typeColors,
 } from "../../mockdata/backgroundColor";
+import DisplayColumns from "./DisplayColumns";
+import TaskDetail from "./TaskDetails";
 
 const TaskManager: React.FC = () => {
-  //const [tasks, setTasks] = useState<Task[]>(taskList);
   const { tasks, setTasks } = useTask();
   const [editing, setEditing] = useState<{ [key: string]: boolean }>({});
   const [selectedTasks, setSelectedTasks] = useState<{
@@ -52,24 +49,49 @@ const TaskManager: React.FC = () => {
   const [currentEditingField, setCurrentEditingField] = useState<string | null>(
     null
   );
-
+  const [showTaskDetails, setShowTaskDetails] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const [hiddenColumns, setHiddenColumns] = useState<string[]>([]);
+  const [showDisplayColumns, setShowDisplayColumns] = useState<boolean>(false);
+
+  // Sorting state
+  const [sortKey, setSortKey] = useState<keyof Task>("taskId");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+  const handleSort = (key: keyof Task) => {
+    setSortKey(key);
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
 
   const toggleSearch = () => {
     setIsOpen(!isOpen);
   };
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/tasks");
-        setTasks(response.data);
-      } catch (error) {
-        console.error("There was an error fetching the tasks!", error);
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredTasks = tasks.filter((task) =>
+    task.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const sortTasks = (
+    tasks: Task[],
+    sortKey: keyof Task,
+    sortOrder: "asc" | "desc"
+  ): Task[] => {
+    return [...tasks].sort((a, b) => {
+      if (a[sortKey] < b[sortKey]) {
+        return sortOrder === "asc" ? -1 : 1;
       }
-    };
-    fetchTasks();
-  }, []);
+      if (a[sortKey] > b[sortKey]) {
+        return sortOrder === "asc" ? 1 : -1;
+      }
+      return 0;
+    });
+  };
 
   const handleAddTask = async () => {
     const newTask: Task = {
@@ -81,50 +103,19 @@ const TaskManager: React.FC = () => {
       priority: "Missing",
     };
     setTasks((prevTasks) => [...prevTasks, newTask]);
-
-    // try {
-    //   const response = await axios.post("http://localhost:3000/tasks", newTask);
-    //   newTask.taskId = response.data;
-    //   setTasks((prevTasks) => [...prevTasks, newTask]);
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.error("There was an error adding the task!", error);
-    // }
   };
 
   const handleDeleteSelected = async () => {
-    // const idsToDelete = Object.keys(selectedTasks).filter(
-    //   (id) => selectedTasks[id]
-    // );
     setTasks((prevTasks) =>
       prevTasks.filter((task) => !selectedTasks[task.taskId])
     );
-    // try {
-    //   await axios.delete("http://localhost:3000/tasks", {
-    //     data: { ids: idsToDelete },
-    //   });
-    //   setTasks((prevTasks) =>
-    //     prevTasks.filter((task) => !selectedTasks[task.taskId])
-    //   );
-    //   setSelectedTasks({});
-    // } catch (error) {
-    //   console.error("There was an error deleting the tasks!", error);
-    // }
   };
+
   const handleChange = async (id: string, field: keyof Task, value: string) => {
     const updatedTasks = tasks.map((task) =>
       task.taskId === id ? { ...task, [field]: value } : task
     );
     setTasks(updatedTasks);
-
-    // const updatedTask = updatedTasks.find((task) => task.taskId === id);
-    // if (updatedTask) {
-    //   try {
-    //     await axios.put(`http://localhost:3000/tasks/${id}`, updatedTask);
-    //   } catch (error) {
-    //     console.error("There was an error updating the task!", error);
-    //   }
-    // }
   };
 
   const handleCheckboxChange = (id: string) => {
@@ -171,6 +162,14 @@ const TaskManager: React.FC = () => {
 
   const isAnyTaskSelected = Object.values(selectedTasks).some(Boolean);
 
+  const toggleColumnVisibility = (column: string) => {
+    setHiddenColumns((prevHiddenColumns) =>
+      prevHiddenColumns.includes(column)
+        ? prevHiddenColumns.filter((col) => col !== column)
+        : [...prevHiddenColumns, column]
+    );
+  };
+
   return (
     <div className="task-manager">
       <div className="container text-white task-manager">
@@ -180,60 +179,77 @@ const TaskManager: React.FC = () => {
               <FontAwesomeIcon icon={faHome} /> Main Table
             </div>
           </div>
-          <div className="row task-manager ">
+          <div className="row task-manager">
             <div className="col d-flex task-manager mt-3">
-              <div className="sprintButton">
+              <div
+                className="sprintButton"
+                style={{ backgroundColor: "rgb(24, 27, 52)" }}
+              >
                 <button className="" onClick={handleAddTask}>
                   New Task
-                  <FontAwesomeIcon icon={faAngleDown} className="buttonIcon" />
+                  <FontAwesomeIcon
+                    icon={faAngleDown}
+                    className="buttonIcon"
+                    style={{ backgroundColor: "inherit" }}
+                  />
                 </button>
               </div>
-              <div className="searchSprint ms-3 task-manager">
-                <button className="searchSprintButton" onClick={toggleSearch}>
-                  <FontAwesomeIcon icon={faSearch} className="iconSprint" />
+              <div
+                className="searchSprint ms-3 mt-1 task-manager"
+                style={{ backgroundColor: "rgb(24, 27, 52)" }}
+              >
+                <button
+                  className="searchSprintButton"
+                  onClick={toggleSearch}
+                  style={{ backgroundColor: "rgb(24, 27, 52)" }}
+                >
+                  <FontAwesomeIcon
+                    icon={faSearch}
+                    className="iconSprint"
+                    style={{ backgroundColor: "rgb(24, 27, 52)" }}
+                  />
                 </button>
-                {!isOpen && <span>Search</span>}
+                {!isOpen && (
+                  <span style={{ backgroundColor: "rgb(24, 27, 52)" }}>
+                    Search
+                  </span>
+                )}
                 {isOpen && (
                   <input
                     type="text"
                     placeholder="Search in this board"
-                    className="searchInput"
+                    className="searchInput text-white"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
                     autoFocus
                   />
                 )}
               </div>
-              <div className="sprintPerson ms-3">
+              <div
+                className="sprintPerson ms-3"
+                style={{ backgroundColor: "rgb(24, 27, 52)" }}
+              >
                 <button className="sprintPersonButton">
-                  <FontAwesomeIcon icon={faUserCircle} className="iconSprint" />
-                  Person
-                </button>
-              </div>
-              <div className="sprintPerson ms-3">
-                <button className="sprintPersonButton">
-                  <FontAwesomeIcon icon={faFilter} className="iconSprint" />
-                  Filter
-                </button>
-              </div>
-              <div className="sprintPerson ms-3">
-                <button className="sprintPersonButton">
-                  <FontAwesomeIcon icon={faSort} className="iconSprint" />
-                  Sort
-                </button>
-              </div>
-              <div className="sprintPerson ms-3">
-                <button className="sprintPersonButton">
-                  <FontAwesomeIcon icon={faEyeSlash} className="iconSprint" />
+                  <FontAwesomeIcon
+                    icon={faEyeSlash}
+                    className="iconSprint"
+                    onClick={() => setShowDisplayColumns(!showDisplayColumns)}
+                  />
                   Hide
+                  {showDisplayColumns && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        zIndex: 100,
+                      }}
+                    >
+                      <DisplayColumns
+                        hiddenColumns={hiddenColumns}
+                        toggleColumnVisibility={toggleColumnVisibility}
+                      />
+                    </div>
+                  )}
                 </button>
-              </div>
-              <div className="sprintPerson ms-3">
-                <button className="sprintPersonButton">
-                  <FontAwesomeIcon icon={faLayerGroup} className="iconSprint" />
-                  Group by
-                </button>
-              </div>
-              <div className="sprintPerson ms-3">
-                <button className="sprintPersonButton">...</button>
               </div>
             </div>
           </div>
@@ -247,204 +263,242 @@ const TaskManager: React.FC = () => {
                 <Checkbox>
                   <input type="checkbox" />
                 </Checkbox>
-                <TableHeader>Task</TableHeader>
-                <TableHeader>Owner</TableHeader>
-                <TableHeader>Status</TableHeader>
-                <TableHeader>Priority</TableHeader>
-                <TableHeader>Type</TableHeader>
-                {/* <TableHeader>Actual SP</TableHeader> */}
-                <TableHeader>Item ID</TableHeader>
+                {!hiddenColumns.includes("Task") && (
+                  <TableHeader onClick={() => handleSort("name")}>
+                    Task{" "}
+                    {sortKey === "name" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </TableHeader>
+                )}
+                {!hiddenColumns.includes("Owner") && (
+                  <TableHeader onClick={() => handleSort("owner")}>
+                    Owner{" "}
+                    {sortKey === "owner" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </TableHeader>
+                )}
+                {!hiddenColumns.includes("Status") && (
+                  <TableHeader onClick={() => handleSort("status")}>
+                    Status{" "}
+                    {sortKey === "status" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </TableHeader>
+                )}
+                {!hiddenColumns.includes("Priority") && (
+                  <TableHeader onClick={() => handleSort("priority")}>
+                    Priority{" "}
+                    {sortKey === "priority" &&
+                      (sortOrder === "asc" ? "↑" : "↓")}
+                  </TableHeader>
+                )}
+                {!hiddenColumns.includes("Type") && (
+                  <TableHeader onClick={() => handleSort("type")}>
+                    Type{" "}
+                    {sortKey === "type" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </TableHeader>
+                )}
+                {!hiddenColumns.includes("Item ID") && (
+                  <TableHeader onClick={() => handleSort("taskId")}>
+                    Item ID{" "}
+                    {sortKey === "taskId" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </TableHeader>
+                )}
               </TableRow>
             </thead>
             <tbody>
-              {tasks.map((task) => (
-                <TableRow key={task.taskId}>
-                  <Checkbox>
-                    <input
-                      type="checkbox"
-                      checked={!!selectedTasks[task.taskId]}
-                      onChange={() => handleCheckboxChange(task.taskId)}
-                    />
-                  </Checkbox>
-                  <TableCell bgColor="rgb(48, 50, 78)">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div className="d-flex align-items-center">
-                        {editing[`${task.taskId}-name`] ? (
-                          <Input
-                            type="text"
-                            value={task.name}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                              handleChange(task.taskId, "name", e.target.value)
+              {sortTasks(filteredTasks, sortKey || "taskId", sortOrder).map(
+                (task) => (
+                  <TableRow key={task.taskId}>
+                    <Checkbox>
+                      <input
+                        type="checkbox"
+                        checked={!!selectedTasks[task.taskId]}
+                        onChange={() => handleCheckboxChange(task.taskId)}
+                      />
+                    </Checkbox>
+                    {!hiddenColumns.includes("Task") && (
+                      <TableCell bgColor="rgb(48, 50, 78)">
+                        <div className="d-flex align-items-center justify-content-between">
+                          <div className="d-flex align-items-center">
+                            {editing[`${task.taskId}-name`] ? (
+                              <Input
+                                type="text"
+                                value={task.name}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                  handleChange(
+                                    task.taskId,
+                                    "name",
+                                    e.target.value
+                                  )
+                                }
+                                onBlur={() =>
+                                  toggleEditing(task.taskId, "name", false)
+                                }
+                                onKeyPress={(
+                                  e: KeyboardEvent<HTMLInputElement>
+                                ) => {
+                                  if (e.key === "Enter") {
+                                    toggleEditing(task.taskId, "name", false);
+                                  }
+                                }}
+                              />
+                            ) : (
+                              <span
+                                onClick={() =>
+                                  toggleEditing(task.taskId, "name", true)
+                                }
+                              >
+                                {task.name || "New task"}
+                              </span>
+                            )}
+                          </div>
+                          <div
+                            className="ms-2"
+                            onClick={() =>
+                              toggleEditing(
+                                task.taskId,
+                                "name",
+                                !editing[`${task.taskId}-task`]
+                              )
                             }
-                            onBlur={() =>
-                              toggleEditing(task.taskId, "name", false)
-                            }
-                            onKeyPress={(
-                              e: KeyboardEvent<HTMLInputElement>
-                            ) => {
-                              if (e.key === "Enter") {
-                                toggleEditing(task.taskId, "name", false);
+                          >
+                            <FontAwesomeIcon
+                              icon={faArrowsUpDownLeftRight}
+                              onClick={() =>
+                                setShowTaskDetails(!showTaskDetails)
                               }
-                            }}
-                          />
+                            />
+                          </div>
+                        </div>
+                        {currentEditingTaskId === task.taskId &&
+                          showTaskDetails && (
+                            <div
+                            // style={{
+                            //   position: "absolute",
+                            //   zIndex: 10,
+                            //   width: "70vw",
+                            //   height: "80%",
+                            //   marginLeft: "50px",
+                            // }}
+                            >
+                              <TaskDetail
+                                taskName={task.name}
+                                task={task}
+                                open={showTaskDetails}
+                                onClose={() => setShowTaskDetails(false)}
+                                onSelectPriority={onSelectPriority}
+                                onSelectStatus={onSelectStatus}
+                                onSelectType={onSelectType}
+                                handleChange={handleChange}
+                              />
+                            </div>
+                          )}
+                      </TableCell>
+                    )}
+                    {!hiddenColumns.includes("Owner") && (
+                      <TableCell bgColor="rgb(48, 50, 78)">
+                        {currentEditingTaskId === task.taskId &&
+                        currentEditingField === "owner" &&
+                        editing[`${task.taskId}-owner`] ? (
+                          <>
+                            <span
+                              onClick={() =>
+                                toggleEditing(task.taskId, "owner", false)
+                              }
+                            >
+                              {<FontAwesomeIcon icon={faUserCircle} />}
+                            </span>
+                            <div
+                              style={{
+                                position: "absolute",
+                                zIndex: 100,
+                                marginTop: "25px",
+                                width: "15%",
+                              }}
+                            >
+                              <UsersToTask taskId={task.taskId} />
+                            </div>
+                          </>
                         ) : (
                           <span
                             onClick={() =>
-                              toggleEditing(task.taskId, "name", true)
+                              toggleEditing(task.taskId, "owner", true)
                             }
                           >
-                            {task.name || "New task"}
+                            {<FontAwesomeIcon icon={faUserCircle} />}
                           </span>
                         )}
-                      </div>
-                      <div
-                        className="ms-2"
-                        onClick={() =>
-                          toggleEditing(
-                            task.taskId,
-                            "name",
-                            !editing[`${task.taskId}-task`]
-                          )
-                        }
-                      >
-                        <FontAwesomeIcon icon={faArrowsUpDownLeftRight} />
-                      </div>
-                    </div>
-                    {editing[`${task.taskId}-task`] && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          zIndex: 10,
-                          width: "70vw",
-                          height: "80%",
-                          marginLeft: "50px",
-                        }}
-                      >
-                        {/* <TaskDetail
-                          taskName={task.name}
-                          task={task}
-                          onSelectPriority={onSelectPriority}
-                          onSelectStatus={onSelectStatus}
-                          onSelectType={onSelectType}
-                          handleChange={handleChange}
-                        /> */}
-                      </div>
+                      </TableCell>
                     )}
-                  </TableCell>
-
-                  <Checkbox>
-                    {currentEditingTaskId === task.taskId &&
-                    currentEditingField === "owner" &&
-                    editing[`${task.taskId}-owner`] ? (
-                      <>
-                        <span
-                          onClick={() =>
-                            toggleEditing(task.taskId, "owner", false)
-                          }
-                        >
-                          {<FontAwesomeIcon icon={faUserCircle} />}
-                        </span>
-                        <div
-                          style={{
-                            position: "absolute",
-                            zIndex: 100,
-                            marginTop: "25px",
-                            width: "15%",
-                          }}
-                        >
-                          <UsersToTask taskId={task.taskId} />
-                        </div>
-                      </>
-                    ) : (
-                      <span
-                        onClick={() =>
-                          toggleEditing(task.taskId, "owner", true)
-                        }
-                      >
-                        {<FontAwesomeIcon icon={faUserCircle} />}
-                      </span>
+                    {!hiddenColumns.includes("Status") && (
+                      <TableCell bgColor={statusColors[task.status]}>
+                        {currentEditingTaskId === task.taskId &&
+                        currentEditingField === "status" &&
+                        editing[`${task.taskId}-status`] ? (
+                          <div style={{ position: "absolute", zIndex: 10 }}>
+                            <TaskStatusList onSelect={onSelectStatus} />
+                          </div>
+                        ) : (
+                          <span
+                            onClick={() =>
+                              toggleEditing(task.taskId, "status", true)
+                            }
+                            style={{
+                              background: `${statusColors[task.status]}`,
+                            }}
+                          >
+                            {task.status || "Missing"}
+                          </span>
+                        )}
+                      </TableCell>
                     )}
-                  </Checkbox>
-                  <TableCell bgColor={statusColors[task.status]}>
-                    {currentEditingTaskId === task.taskId &&
-                    currentEditingField === "status" &&
-                    editing[`${task.taskId}-status`] ? (
-                      <div style={{ position: "absolute", zIndex: 10 }}>
-                        <TaskStatusList onSelect={onSelectStatus} />
-                      </div>
-                    ) : (
-                      <span
-                        onClick={() =>
-                          toggleEditing(task.taskId, "status", true)
-                        }
-                        style={{ background: `${statusColors[task.status]}` }}
-                      >
-                        {task.status || "Missing"}
-                      </span>
+                    {!hiddenColumns.includes("Priority") && (
+                      <TableCell bgColor={priorityColors[task.priority]}>
+                        {currentEditingTaskId === task.taskId &&
+                        currentEditingField === "priority" &&
+                        editing[`${task.taskId}-priority`] ? (
+                          <div style={{ position: "absolute", zIndex: 10 }}>
+                            <TaskPriorityList onSelect={onSelectPriority} />
+                          </div>
+                        ) : (
+                          <span
+                            onClick={() =>
+                              toggleEditing(task.taskId, "priority", true)
+                            }
+                            style={{
+                              background: `${priorityColors[task.priority]}`,
+                            }}
+                          >
+                            {task.priority || "Missing"}
+                          </span>
+                        )}
+                      </TableCell>
                     )}
-                  </TableCell>
-                  <TableCell bgColor={priorityColors[task.priority]}>
-                    {currentEditingTaskId === task.taskId &&
-                    currentEditingField === "priority" &&
-                    editing[`${task.taskId}-priority`] ? (
-                      <div style={{ position: "absolute", zIndex: 10 }}>
-                        <TaskPriorityList onSelect={onSelectPriority} />
-                      </div>
-                    ) : (
-                      <span
-                        onClick={() =>
-                          toggleEditing(task.taskId, "priority", true)
-                        }
-                        style={{
-                          background: `${priorityColors[task.priority]}`,
-                        }}
-                      >
-                        {task.priority || "Missing"}
-                      </span>
+                    {!hiddenColumns.includes("Type") && (
+                      <TableCell bgColor={typeColors[task.type]}>
+                        {currentEditingTaskId === task.taskId &&
+                        currentEditingField === "type" &&
+                        editing[`${task.taskId}-type`] ? (
+                          <div style={{ position: "absolute", zIndex: 10 }}>
+                            <TaskTypeList onSelect={onSelectType} />
+                          </div>
+                        ) : (
+                          <span
+                            onClick={() =>
+                              toggleEditing(task.taskId, "type", true)
+                            }
+                            style={{ background: `${typeColors[task.type]}` }}
+                          >
+                            {task.type || "Missing"}
+                          </span>
+                        )}
+                      </TableCell>
                     )}
-                  </TableCell>
-                  <TableCell bgColor={typeColors[task.type]}>
-                    {currentEditingTaskId === task.taskId &&
-                    currentEditingField === "type" &&
-                    editing[`${task.taskId}-type`] ? (
-                      <div style={{ position: "absolute", zIndex: 10 }}>
-                        <TaskTypeList onSelect={onSelectType} />
-                      </div>
-                    ) : (
-                      <span
-                        onClick={() => toggleEditing(task.taskId, "type", true)}
-                        style={{ background: `${typeColors[task.type]}` }}
-                      >
-                        {task.type || "Missing"}
-                      </span>
+                    {!hiddenColumns.includes("Item ID") && (
+                      <TableCell bgColor="rgb(48, 50, 78)">
+                        {task.taskId}
+                      </TableCell>
                     )}
-                  </TableCell>
-                  {/* <TableCell>
-                  {editing[${task.id}-actualSP] ? (
-                    <Input
-                      type="text"
-                      value={task.task}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                        handleChange(task.id, "actualSP", e.target.value)
-                      }
-                      onBlur={() => toggleEditing(task.id, "actualSP", false)}
-                      onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => {
-                        if (e.key === "Enter") {
-                          toggleEditing(task.id, "actualSP", false);
-                        }
-                      }}
-                    />
-                  ) : (
-                    <span
-                      onClick={() => toggleEditing(task.id, "actualSP", true)}
-                    >
-                      {task.actualSP || "1"}
-                    </span>
-                  )}
-                </TableCell> */}
-                  <TableCell bgColor="rgb(48, 50, 78)">{task.taskId}</TableCell>
-                </TableRow>
-              ))}
+                  </TableRow>
+                )
+              )}
             </tbody>
           </Table>
           {isAnyTaskSelected && (

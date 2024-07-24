@@ -9,8 +9,12 @@ const WorkSpace = () => {
   };
 
   return (
-    <div className="recently-visited">
-      <div className="header mb-2" onClick={toggleVisibility}>
+    <div className="recently-visited" style={{ background: "#181B34" }}>
+      <div
+        className="header mb-2"
+        onClick={toggleVisibility}
+        style={{ background: "#181B34" }}
+      >
         <button className={`toggle-button ${isVisible ? "open" : "closed"}`}>
           {isVisible ? "V" : ">"}
         </button>

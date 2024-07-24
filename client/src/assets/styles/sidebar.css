@@ -21,3 +21,10 @@
 .fsize {
   font-size: small;
 }
+
+.barHolder:hover {
+  box-shadow: 0 4px 8px rgb(135, 134, 134);
+}
+.help:hover {
+  box-shadow: 0 4px 8px rgb(135, 134, 134);
+}

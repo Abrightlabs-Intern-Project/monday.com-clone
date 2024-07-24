@@ -5,5 +5,6 @@ export interface DropCardModal {
   board: IconDefinition;
   heading: string;
   logo: string;
+  navigate: string;
   content: string;
 }

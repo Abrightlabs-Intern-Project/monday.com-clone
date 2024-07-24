@@ -1,4 +1,4 @@
-.cardHolder {
+/* .cardHolder {
   margin-bottom: 30px;
 }
 .card-container {
@@ -7,4 +7,50 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cardHolder {
+  box-sizing: border-box;
+}
+
+.cardHead img {
+  width: 100%;
+  height: auto;
+}
+
+.editable-field {
+  cursor: pointer;
+  padding: 5px;
+  color: white;
+} */
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cardHolder {
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.cardHolder:hover {
+  box-shadow: 0 4px 8px rgb(135, 134, 134);
+}
+
+.cardHead img {
+  width: 100%;
+  height: auto;
+}
+
+.editable-field {
+  cursor: pointer;
+  padding: 5px;
+  color: white;
 }

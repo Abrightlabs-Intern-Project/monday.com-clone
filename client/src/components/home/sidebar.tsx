@@ -5,8 +5,8 @@ import rocket from "../../assets/images/rocket.jpg";
 import help from "../../assets/images/helpcenter.jpg";
 const SideBar = () => {
   return (
-    <div className="container">
-      <div className="wrapper mt-4">
+    <div className="container" style={{ background: "#181B34" }}>
+      <div className="wrapper mt-4 p-1" style={{ background: "#181B34" }}>
         <div className="row text-white p-2 barHolder text-center mb-3">
           <div className="templateHolder d-flex">
             <div className="w-100 h-100">
@@ -23,13 +23,15 @@ const SideBar = () => {
             </p>
           </div>
         </div>
-        <div className="row mt-3 mb-3">
-          <div className="text-center ">
-            <p className="fs-6">Learn & get inspired</p>
+        <div className="row mt-3 mb-3" style={{ background: "#181B34" }}>
+          <div className="text-center " style={{ background: "#181B34" }}>
+            <p className="fs-6" style={{ background: "#181B34" }}>
+              Learn & get inspired
+            </p>
           </div>
         </div>
         <div className="row help mb-3">
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between ">
             <div className="w-25  me-3">
               <img src={rocket} alt="/" className="img-fluid rounded h-75" />
             </div>
